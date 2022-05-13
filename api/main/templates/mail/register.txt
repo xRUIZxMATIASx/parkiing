@@ -1,0 +1,11 @@
+Bienvenido {{user.email}} {{user.admin}}!
+
+Gracias por registrarte en nuestro sistema.
+
+Con nuestro servicio podras:
+
+- Cargar tus proyectos
+- Eliminar proyectos
+- Buscar proyectos
+
+Nuestro sitio - Info - Sobre nosotros

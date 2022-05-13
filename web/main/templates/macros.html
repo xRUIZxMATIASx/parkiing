@@ -1,0 +1,68 @@
+{% macro show_user(user) %}
+<tr>
+    <th scope="row">{{user.userId}}</th>
+    <td>{{user.email}}</td>
+    <td>{{user.admin}}</td>
+    <td>
+        <a href="user/{{ user.userId }}">Ver</a>
+    </td>
+</tr>
+{% endmacro %}
+
+{% macro show_seisms_no_verified(seism) %}
+<tr>
+    <th scope="row">{{seism.seismId}}</th>
+    <td>{{seism.datetime}}</td>
+    <td>{{seism.depth}}</td>
+    <td>{{seism.magnitude}}</td>
+    <td>{{seism.latitude}}</td>
+    <td>{{seism.longitude}}</td>
+    <td>
+        <a href="sismos-no-verificados/{{ seism.seismId }}">Ver</a>
+    </td>
+</tr>
+{% endmacro %}
+
+{% macro show_seisms_verified(seism) %}
+<tr>
+    <th scope="row">{{seism.seismId}}</th>
+    <td>{{seism.datetime}}</td>
+    <td>{{seism.depth}}</td>
+    <td>{{seism.magnitude}}</td>
+    <td>{{seism.latitude}}</td>
+    <td>{{seism.longitude}}</td>
+    <td>
+        <a href="sismos-verificados/{{ seism.seismId }}">Ver</a>
+    </td>
+</tr>
+{% endmacro %}
+
+{% macro show_seisms_verified2(seism, web) %}
+<tr>
+    <th scope="row">{{seism.seismId}}</th>
+    <td>{{seism.datetime}}</td>
+    <td>{{seism.depth}}</td>
+    <td>{{seism.magnitude}}</td>
+    <td>{{seism.latitude}}</td>
+    <td>{{seism.longitude}}</td>
+    <td>
+        <a href="{{web}}/sismos-verificados-2/{{ seism.seismId }}">Ver</a>
+    </td>
+</tr>
+{% endmacro %}
+
+{% macro show_sensor(sensor) %}
+<tr>
+    <th scope="row">{{sensor.sensorId}}</th>
+    <td>{{sensor.name}}</td>
+    <td>{{sensor.ip}}</td>
+    <td>{{sensor.port}}</td>
+    <td>{{sensor.status}}</td>
+    <td>{{sensor.active}}</td>
+    <td>{{sensor.userId.email}}</td>
+    <td>
+        <a href="sensor/{{ sensor.sensorId }}">Ver</a>
+    </td>
+</tr>
+{% endmacro %}
+

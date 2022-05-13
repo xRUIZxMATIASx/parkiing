@@ -1,0 +1,4 @@
+{% macro show_error(field) %} {% if field.errors %}
+{% for error in field.errors %} {{ error }}
+{% endfor %}
+{% endif %} {% endmacro %} {% macro show_field(field) %} {{ field.label }} {{ field(**kwargs)|safe }} {{show_error(field)}} {% endmacro %} {% macro show_submit(field) %} {{ field(**kwargs)|safe }} {% endmacro %} 

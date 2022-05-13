@@ -1,0 +1,7 @@
+Hola {{user.email}}!
+
+Con el siguiente link podras acceder para cambiar tu clave
+
+http://127.0.0.1:5000/auth/recover-password/{{user.password}}
+
+Nuestro sitio - Info - Sobre nosotros

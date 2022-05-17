@@ -26,6 +26,7 @@ def create_app():
 
     import main.resources as resources
     from main.auth import routes
+    from main.routes import routes as routes2
 
     api.add_resource(resources.ParkingResource, '/parking/<id>')
     api.add_resource(resources.UserResource, '/user/<id>')
@@ -34,6 +35,7 @@ def create_app():
     api.init_app(app)
 
     app.register_blueprint(routes.auth)
+    app.register_blueprint(routes2.parking)
 
     app.config['MAIL_HOSTNAME'] = os.getenv('MAIL_HOSTNAME')
     app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')

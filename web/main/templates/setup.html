@@ -24,8 +24,8 @@
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div class="navbar-brand-wrapper d-flex justify-content-center">
         <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
-          <a class="navbar-brand brand-logo" href="static/index.html"><img src="static/images/logo.svg" alt="logo"/></a>
-          <a class="navbar-brand brand-logo-mini" href="static/index.html"><img src="static/images/logo-mini.svg" alt="logo"/></a>
+          <a class="navbar-brand brand-logo" href="/index"><img src="static/images/logo.svg" alt="logo"/></a>
+          <a class="navbar-brand brand-logo-mini" href="/index"><img src="static/images/logo-mini.svg" alt="logo"/></a>
           <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
             <span class="mdi mdi-sort-variant"></span>
           </button>
@@ -52,7 +52,7 @@
               <span class="nav-profile-name">Usuario {{ current_user.id }}</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-              <a class="dropdown-item">
+              <a href="/config" class="dropdown-item">
                 <i class="mdi mdi-settings text-primary"></i>
                 Configuraciones
               </a>
@@ -95,50 +95,31 @@
             <div class="col-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title">Basic form elements</h4>
+                  <h4 class="card-title">Crear playa de estacionamiento</h4>
                   <p class="card-description">
-                    Basic form elements
+                    Introduzca los datos necesarios, luego puede modificarlos.
                   </p>
-                  <form class="forms-sample">
+                  <form class="forms-sample" action="{{ url_for('config.index') }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                     <div class="form-group">
-                      <label for="exampleInputName1">Name</label>
-                      <input type="text" class="form-control" id="exampleInputName1" placeholder="Name">
+                      <label>Nombre</label>
+                      {{ form_setup.name(class_="form-control") }}
                     </div>
                     <div class="form-group">
-                      <label for="exampleInputEmail3">Email address</label>
-                      <input type="email" class="form-control" id="exampleInputEmail3" placeholder="Email">
+                      <label>Ubicacion</label>
+                      {{ form_setup.location(class_="form-control") }}
+                      <button type="button" onclick="getLocation();" class="btn btn-primary me-2">Geolocalizar</button>
                     </div>
                     <div class="form-group">
-                      <label for="exampleInputPassword4">Password</label>
-                      <input type="password" class="form-control" id="exampleInputPassword4" placeholder="Password">
+                      <label>Cantidad de espacios disponibles</label>
+                      {{ form_setup.space(class_="form-control") }}
                     </div>
                     <div class="form-group">
-                      <label for="exampleSelectGender">Gender</label>
-                        <select class="form-control" id="exampleSelectGender">
-                          <option>Male</option>
-                          <option>Female</option>
-                        </select>
-                      </div>
-                    <div class="form-group">
-                      <label>File upload</label>
-                      <input type="file" name="img[]" class="file-upload-default">
-                      <div class="input-group col-xs-12">
-                        <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image">
-                        <span class="input-group-append">
-                          <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
-                        </span>
-                      </div>
+                      <label>Precio</label>
+                      {{ form_setup.price(class_="form-control") }}
                     </div>
-                    <div class="form-group">
-                      <label for="exampleInputCity1">City</label>
-                      <input type="text" class="form-control" id="exampleInputCity1" placeholder="Location">
-                    </div>
-                    <div class="form-group">
-                      <label for="exampleTextarea1">Textarea</label>
-                      <textarea class="form-control" id="exampleTextarea1" rows="4"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary me-2">Submit</button>
-                    <button class="btn btn-light">Cancel</button>
+                    {{ form_setup.submit_button(class_="btn btn-primary me-2") }}
+                    <button class="btn btn-light">Cancelar</button>
                   </form>
                 </div>
               </div>
@@ -168,6 +149,29 @@
   <script src="static/js/template.js"></script>
   <!-- endinject -->
   <!-- Custom js for this page-->
+  <script type="text/javascript">
+    function showLocation(position) {
+      const {latitude, longitude} = position.coords;
+      const latlongvalue = `${latitude},${longitude}`;
+      var input = document.getElementById('location');
+      input.value = latlongvalue;
+    }
+    function errorHandler(err) {
+      if(err.code == 1) {
+        alert("Error: Debes aceptar los permisos");
+      } else if( err.code == 2) {
+        alert("Error: La ubicacion no está disponible");
+      }
+    }
+    function getLocation(){
+      if(navigator.geolocation){
+        var options = {timeout:60000};
+        navigator.geolocation.getCurrentPosition(showLocation, errorHandler, options);
+      } else{
+        alert("Lo lamento, tu navegador no soporta geolocalización");
+      }
+    }
+  </script>
   <script src="static/js/file-upload.js"></script>
   <!-- End custom js for this page-->
 </body>

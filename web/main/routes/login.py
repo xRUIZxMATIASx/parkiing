@@ -6,7 +6,7 @@ from flask import Blueprint, render_template, make_response, url_for
 from flask import current_app, flash
 from flask_login import login_required, logout_user
 from flask_login import login_user
-from main.forms.login import Login
+from main.forms.login import Login, Register
 from main.resources.auth import LoggedUser
 from werkzeug.utils import redirect
 
@@ -48,6 +48,23 @@ def index():
     return render_template('login.html',
                            form_login=form_login,
                            web=web)
+
+@login.route('/register', methods=['POST', 'GET'])
+def register():
+    form = Register()
+    if form.validate_on_submit():
+        data = {
+            "email": form.email.data,
+            "password": form.password.data,
+            "admin": form.admin.data
+        }
+        r = requests.post(current_app.config['API_URL'] + "/auth/register",
+                          headers={'content-type': 'application/json'}, json=data)
+        if r.status_code == 201:
+            return redirect(url_for('login.index'))
+        else:
+            print("Error")
+    return render_template('register.html', form=form)
 
 @login.route('/logout')
 @login_required

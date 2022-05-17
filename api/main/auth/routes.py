@@ -9,7 +9,6 @@ auth = Blueprint('auth', __name__, url_prefix='/auth')
 
 @auth.route('/login', methods=['POST'])
 def login():
-
     json_request = request.get_json()
     user = db.session.query(UserModel).filter(UserModel.email == json_request.get("email")).first_or_404()
     if user.validate_pass(request.get_json().get('password')):

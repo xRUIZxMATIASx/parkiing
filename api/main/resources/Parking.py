@@ -4,63 +4,60 @@ from .. import db
 from main.models import ParkingModel, UserModel
 #from flask_jwt_extended import jwt_required, jwt_optional
 
-
 class Parking(Resource):
 
     #@jwt_required
     def get(self, id):
-        sensor = db.session.query(Parking).get_or_404(id)
-        return sensor.to_json()
+        parking = db.session.query(Parking).get_or_404(id)
+        return parking.to_json()
 
     #@jwt_required
     def delete(self, id):
-        sensor = db.session.query(Parking).get_or_404(id)
-        db.session.delete(sensor)
+        parking = db.session.query(Parking).get_or_404(id)
+        db.session.delete(parking)
         db.session.commit()
         return "DELETE COMPLETE", 204
 
     #@jwt_required
     def put(self, id):
-        sensor = db.session.query(Parking).get_or_404(id)
+        parking = db.session.query(Parking).get_or_404(id)
         for key, value in request.get_json().items():
-            setattr(sensor, key, value)
-        db.session.add(sensor)
+            setattr(parking, key, value)
+        db.session.add(parking)
         db.session.commit()
         return request.get_json(), 201
 
 
-"""
-class Sensors(Resource):
-    @jwt_optional
+class Parkings(Resource):
     def get(self):
         page = 1
         per_page = 10
         filter = request.get_json().items()
-        sensors = db.session.query(SensorModel)
+        parkings = db.session.query(parkingModel)
         for key, value in filter:
-            if key == "sensorId":
-                sensors = sensors.filter(SensorModel.sensorId == value)
+            if key == "parkingId":
+                parkings = parkings.filter(parkingModel.parkingId == value)
             if key == "name":
-                sensors = sensors.filter(SensorModel.name.like("%" + value + "%"))
+                parkings = parkings.filter(parkingModel.name.like("%" + value + "%"))
             if key == "status":
-                sensors = sensors.filter(SensorModel.status == value)
+                parkings = parkings.filter(parkingModel.status == value)
             if key == "active":
-                sensors = sensors.filter(SensorModel.active == value)
+                parkings = parkings.filter(parkingModel.active == value)
             if key == "user_email":
-                sensors = sensors.join(SensorModel.user).filter(UserModel.email.like("%" + value + "%"))
+                parkings = parkings.join(parkingModel.user).filter(UserModel.email.like("%" + value + "%"))
             if key == "order_by":
                 if value == "name[desc]":
-                    sensors = sensors.order_by(SensorModel.name.desc())
+                    parkings = parkings.order_by(parkingModel.name.desc())
                 if value == "name[asc]":
-                    sensors = sensors.order_by(SensorModel.name.asc())
+                    parkings = parkings.order_by(parkingModel.name.asc())
                 if value == "active[desc]":
-                    sensors = sensors.order_by(SensorModel.active.desc())
+                    parkings = parkings.order_by(parkingModel.active.desc())
                 if value == "active[asc]":
-                    sensors = sensors.order_by(SensorModel.active.asc())
+                    parkings = parkings.order_by(parkingModel.active.asc())
                 if value == "status[desc]":
-                    sensors = sensors.order_by(SensorModel.status.desc())
+                    parkings = parkings.order_by(parkingModel.status.desc())
                 if value == "status[asc]":
-                    sensors = sensors.order_by(SensorModel.status.asc())
+                    parkings = parkings.order_by(parkingModel.status.asc())
 
             if key == "page":
                 page = value
@@ -68,16 +65,9 @@ class Sensors(Resource):
             if key == "per_page":
                 per_page = int(value)
 
-        sensors = sensors.paginate(page, per_page, True, 10)
-        return jsonify({'sensors': [sensor.to_json() for sensor in sensors.items],
-                            "total_items": sensors.total,
-                            "total_pages": sensors.pages,
+        parkings = parkings.paginate(page, per_page, True, 10)
+        return jsonify({'parkings': [parking.to_json() for parking in parkings.items],
+                            "total_items": parkings.total,
+                            "total_pages": parkings.pages,
                             "page": page})
 
-    @jwt_required
-    def post(self):
-        sensor = SensorModel.from_json(request.get_json())
-        db.session.add(sensor)
-        db.session.commit()
-        return request.get_json(), 201
-"""

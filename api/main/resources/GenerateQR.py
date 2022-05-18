@@ -1,24 +1,30 @@
+import json
+import os
 from flask_restful import Resource
-from flask import request, jsonify
-from .. import db
+import base64
 import qrcode
-#from flask_jwt_extended import jwt_required, jwt_optional
-
-
-"""
-El codigo
-
-Click en generar codigo QR -> obtener el id de usuario y pasar por parametro -> devolver QR
-
-"""
+import io
+from main.models import ParkingModel
+from .. import db
 
 class GenerateQR(Resource):
 
     #@jwt_required
     def get(self, id):
-        img = qrcode.make("hhttp://localhost:8080/?id="+id)
-        #f = open("output.png", "wb")
-        #img.save(f)
-        #f.close()
+        img = qrcode.make(os.getenv('API_URL') + "parking/search/"+id)
+        img_byte_arr = io.BytesIO()
+        img.save(img_byte_arr, format='PNG')
+        img_byte_arr = img_byte_arr.getvalue()
+        encoded_string = str(base64.b64encode(img_byte_arr).decode("utf-8"))
 
-        return True
+        parking = db.session.query(ParkingModel).get_or_404(id)
+        json_parking = parking.to_json()
+        json_parking["qr"] = encoded_string
+        del json_parking["parkingId"]
+        del json_parking["userId"]
+        for key, value in json_parking.items():
+            setattr(parking, key, value)
+        db.session.add(parking)
+        db.session.commit()
+
+        return encoded_string, 201

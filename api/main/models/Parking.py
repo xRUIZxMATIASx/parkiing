@@ -8,7 +8,7 @@ class Parking(db.Model):
     name = db.Column(db.String(100), nullable=False)
     location = db.Column(db.String(30), nullable=False)
     space = db.Column(db.Integer, nullable=False)
-    qr = db.Column(db.String(100), nullable=False)
+    qr = db.Column(db.String(2000), nullable=True)
     rate = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Integer, nullable=False)
     config = db.Column(db.String(100), nullable=False)
@@ -18,7 +18,9 @@ class Parking(db.Model):
 
 
     def __repr__(self):
-        return '<Sensor: %r %r %r %r %r>' % (self.name, self.location, self.space, self.qr, self.rate)
+        return '<Parking: %r %r %r %r %r>' % (self.name, self.location, self.space, self.qr, self.rate)
+
+
 
     def to_json(self):
         self.user = db.session.query(User).get_or_404(self.userId)
@@ -48,12 +50,12 @@ class Parking(db.Model):
         userId = sensor_json.get('userId')
 
         return Parking(parkingId=parkingId,
-                      name=name,
-                      location=location,
-                      space=space,
-                      qr=qr,
-                      rate=rate,
-                      price=price,
-                      config=config,
-                      userId=userId)
+                       name=name,
+                       location=location,
+                       space=space,
+                       qr=qr,
+                       rate=rate,
+                       price=price,
+                       config=config,
+                       userId=userId)
 

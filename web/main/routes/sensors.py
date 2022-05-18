@@ -107,6 +107,7 @@ def add_sensor():
             'content-type': "application/json",
             'authorization': "Bearer " + auth
         }
+
         data = {
             "name": form.name.data,
             "ip": form.ip.data,

@@ -29,9 +29,9 @@ def create_app():
     from main.routes import routes as routes2
 
     api.add_resource(resources.ParkingResource, '/parking/<id>')
+    api.add_resource(resources.ParkingsResource, '/parkings/<params>')
     api.add_resource(resources.UserResource, '/user/<id>')
     api.add_resource(resources.GenerateQRResource, '/generateqr/<id>')
-    #api.add_resource(resources.UsersResource, '/users')
     api.init_app(app)
 
     app.register_blueprint(routes.auth)

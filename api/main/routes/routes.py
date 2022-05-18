@@ -1,13 +1,13 @@
 from flask import request, Blueprint
 from .. import db
-from main.models import Parking
+from main.models import ParkingModel
 
 parking = Blueprint('parking', __name__, url_prefix='/parking')
 
 
 @parking.route('/add', methods=['POST'])
 def add():
-    parking = Parking.from_json(request.get_json())
+    parking = ParkingModel.from_json(request.get_json())
     try:
         db.session.add(parking)
         db.session.commit()

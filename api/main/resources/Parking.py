@@ -1,3 +1,5 @@
+import math
+
 from flask_restful import Resource
 from flask import request, jsonify
 from .. import db
@@ -8,19 +10,20 @@ class Parking(Resource):
 
     #@jwt_required
     def get(self, id):
-        parking = db.session.query(Parking).get_or_404(id)
+        parking = db.session.query(ParkingModel).get_or_404(id)
         return parking.to_json()
+
 
     #@jwt_required
     def delete(self, id):
-        parking = db.session.query(Parking).get_or_404(id)
+        parking = db.session.query(ParkingModel).get_or_404(id)
         db.session.delete(parking)
         db.session.commit()
         return "DELETE COMPLETE", 204
 
     #@jwt_required
     def put(self, id):
-        parking = db.session.query(Parking).get_or_404(id)
+        parking = db.session.query(ParkingModel).get_or_404(id)
         for key, value in request.get_json().items():
             setattr(parking, key, value)
         db.session.add(parking)
@@ -29,45 +32,31 @@ class Parking(Resource):
 
 
 class Parkings(Resource):
-    def get(self):
-        page = 1
-        per_page = 10
-        filter = request.get_json().items()
-        parkings = db.session.query(parkingModel)
-        for key, value in filter:
-            if key == "parkingId":
-                parkings = parkings.filter(parkingModel.parkingId == value)
-            if key == "name":
-                parkings = parkings.filter(parkingModel.name.like("%" + value + "%"))
-            if key == "status":
-                parkings = parkings.filter(parkingModel.status == value)
-            if key == "active":
-                parkings = parkings.filter(parkingModel.active == value)
-            if key == "user_email":
-                parkings = parkings.join(parkingModel.user).filter(UserModel.email.like("%" + value + "%"))
-            if key == "order_by":
-                if value == "name[desc]":
-                    parkings = parkings.order_by(parkingModel.name.desc())
-                if value == "name[asc]":
-                    parkings = parkings.order_by(parkingModel.name.asc())
-                if value == "active[desc]":
-                    parkings = parkings.order_by(parkingModel.active.desc())
-                if value == "active[asc]":
-                    parkings = parkings.order_by(parkingModel.active.asc())
-                if value == "status[desc]":
-                    parkings = parkings.order_by(parkingModel.status.desc())
-                if value == "status[asc]":
-                    parkings = parkings.order_by(parkingModel.status.asc())
 
-            if key == "page":
-                page = value
+    def get(self, params):
 
-            if key == "per_page":
-                per_page = int(value)
+        coordinates = params.split('&')[0]
+        max_distance = float(params.split('&')[1])
+        parkings = db.session.query(ParkingModel).all()
 
-        parkings = parkings.paginate(page, per_page, True, 10)
-        return jsonify({'parkings': [parking.to_json() for parking in parkings.items],
-                            "total_items": parkings.total,
-                            "total_pages": parkings.pages,
-                            "page": page})
+        new_parkings = list()
 
+        for parking in parkings:
+            try:
+                distance = float(self.calculate_distance(float(coordinates.split(",")[0]), float(coordinates.split(",")[1]), float(parking.location.split(",")[0]), float(parking.location.split(",")[1]))) * 1000
+                if distance < max_distance:
+                    new_parkings.append(parking)
+            except Exception as e:
+                pass
+
+        return jsonify({'parkings': [parking.to_json() for parking in new_parkings]})
+
+    def calculate_distance(self, lat1, long1, lat2, long2):
+        degrees_to_radians = math.pi/180.0
+        phi1 = (90.0 - lat1)*degrees_to_radians
+        phi2 = (90.0 - lat2)*degrees_to_radians
+        theta1 = long1*degrees_to_radians
+        theta2 = long2*degrees_to_radians
+        cos = (math.sin(phi1)*math.sin(phi2)*math.cos(theta1 - theta2) + math.cos(phi1)*math.cos(phi2))
+        arc = math.acos(cos)*6371
+        return arc

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Capturando coordenadas</title>
+</head>
+<body>
+    <form id="get-location" action="{{ url_for('index.index') }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <input type='hidden' id="location" name='location' style="{display: none;}"/>
+        <input type='hidden' value='' style="{display: none;}"/>
+    </form>
+    <script type="text/javascript">
+    var latlongvalue = "";
+    function showLocation(position) {
+    const {latitude, longitude} = position.coords;
+    latlongvalue = `${latitude},${longitude}`;
+    document.getElementById('location').value = latlongvalue;
+    document.getElementById("get-location").submit();
+    }
+    function errorHandler(err) {
+    if(err.code == 1) {
+      alert("Error: Debes aceptar los permisos");
+    } else if( err.code == 2) {
+      alert("Error: La ubicacion no está disponible");
+    }
+    }
+    function getLocation(){
+    if(navigator.geolocation){
+      var options = {timeout:60000};
+      navigator.geolocation.getCurrentPosition(showLocation, errorHandler, options);
+    } else{
+      alert("Lo lamento, tu navegador no soporta geolocalización");
+    }
+    }
+    getLocation();
+    </script>
+</body>
+</html>

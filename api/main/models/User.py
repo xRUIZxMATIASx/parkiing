@@ -1,6 +1,6 @@
 from .. import db
 from werkzeug.security import generate_password_hash, check_password_hash
-
+#from main.models.Parking import Parking
 
 class User(db.Model):
 
@@ -25,11 +25,12 @@ class User(db.Model):
         return '<User: %r %r >' % (self.email, self.admin)
 
     def to_json(self):
+        #self.parking = db.session.query(Parking).get_or_404(self.parkingId)
         user_json = {
             'userId': self.userId,
             'email': str(self.email),
             'admin': self.admin,
-            'parkingId': self.parkingId
+            'parkingId': self.parkingId #self.parking.to_json()
         }
         return user_json
 

@@ -7,6 +7,15 @@
 </tr>
 {% endmacro %}
 
+{% macro show_slots(slots) %}
+<tr>
+    <td>{{slots}}</td>
+    <td>{{slots}}</td>
+    <td>{{slots}}</td>
+    <td>{{slots}}</td>
+</tr>
+{% endmacro %}
+
 {% macro show_markers(parking) %}
     {% set lat, lon = parking.location.split(',') %}
     markers.addLayer(L.marker(["{{ lat }}", "{{ lon }}"], {icon: L.AwesomeMarkers.icon({})}).bindTooltip('{{parking.name}}', {permanent: false, className: 'my-label', offset: [0, 0] }));

@@ -9,7 +9,7 @@
      </style>
    </head>
    <body>
-      <script type="text/javascript" src="../static/js/qrcode.js"></script>
+      <script type="text/javascript" src="../../../static/js/qrcode.js"></script>
       <style>
          .result{
          background-color: green;
@@ -23,15 +23,21 @@
       <div id="reader"></div>
 
       <script type="text/javascript">
+         var html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 450 });
+         html5QrcodeScanner.render(onScanSuccess, onScanError);
+
          function onScanSuccess(qrCodeMessage) {
-            window.location.href = qrCodeMessage;
-            //document.getElementById('result').innerHTML = '<span class="result">'+qrCodeMessage+'</span>';
+            {% if initialized %}
+               window.location.href = qrCodeMessage + "/stop";
+            {% endif %}
+            {% if not initialized %}
+               window.location.href = qrCodeMessage + "/start";
+            {% endif %}
+            html5QrcodeScanner.clear();
          }
          function onScanError(errorMessage) {
            //handle scan error
          }
-         var html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
-         html5QrcodeScanner.render(onScanSuccess, onScanError);
       </script>
    </body>
 </html>

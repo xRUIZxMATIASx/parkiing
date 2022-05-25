@@ -115,11 +115,27 @@
                   </div>
                 </div>
                 <div class="d-flex justify-content-between align-items-end flex-wrap">
-                  <a href="/parkings/search" class="btn btn-primary mt-2 mt-xl-0">Adquirir servicio</a>
+                  {% if avaible_slots == 0 %}
+                    {% if can_finish %}
+                      <a href="/parkings/search/{{ parking.parkingId }}/scan" class="btn btn-danger mt-2 mt-xl-0">Finalizar</a>
+                    {% endif %}
+                    {% if not can_finish %}
+                      <a class="btn btn-secondary mt-2 mt-xl-0">No disponible</a>
+                    {% endif %}
+                  {% endif %}
+                  {% if avaible_slots != 0 %}
+                    {% if can_finish %}
+                      <a href="/parkings/search" class="btn btn-danger mt-2 mt-xl-0">Finalizar</a>
+                    {% endif %}
+                    {% if not can_finish %}
+                      <a href="/parkings/search/{{ parking.parkingId }}/scan" class="btn btn-success mt-2 mt-xl-0">Adquirir servicio</a>
+                    {% endif %}
+                  {% endif %}
                 </div>
               </div>
             </div>
           </div>
+
 
           <div class="row">
             <div class="col-md-12 stretch-card">
@@ -139,6 +155,10 @@
                              <tr>
                                 <td>Espacios</td>
                                 <td>{{ parking.space }}</td>
+                             </tr>
+                             <tr>
+                                <td>Disponibles</td>
+                                <td>{{ avaible_slots }}</td>
                              </tr>
                              <tr>
                                 <td>Calificaciones</td>

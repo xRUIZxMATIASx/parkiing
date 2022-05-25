@@ -10,8 +10,8 @@ from .. import db
 class GenerateQR(Resource):
 
     #@jwt_required
-    def get(self, id):
-        img = qrcode.make(os.getenv('API_URL') + "parking/search/"+id)
+    def post(self, id):
+        img = qrcode.make("/parkings/search/"+id)
         img_byte_arr = io.BytesIO()
         img.save(img_byte_arr, format='PNG')
         img_byte_arr = img_byte_arr.getvalue()

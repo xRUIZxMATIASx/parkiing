@@ -7,7 +7,7 @@ class Slots(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     parkingId = db.Column(db.Integer, nullable=False)
     userId = db.Column(db.Integer, nullable=True)
-    timestamp = db.Column(db.TIMESTAMP, nullable=True)
+    timestamp = db.Column(db.Integer, nullable=True)
     state = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):

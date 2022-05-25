@@ -1,5 +1,7 @@
 from .. import db
+from flask import jsonify
 from main.models.User import User
+from main.models.Slots import Slots
 
 
 class Parking(db.Model):
@@ -24,6 +26,7 @@ class Parking(db.Model):
 
     def to_json(self):
         self.user = db.session.query(User).get_or_404(self.userId)
+        self.slots = db.session.query(Slots).filter(Slots.parkingId == int(self.parkingId)).all()
         parking_json = {
             'parkingId': self.parkingId,
             'name': str(self.name),
@@ -33,7 +36,8 @@ class Parking(db.Model):
             'rate': int(self.rate),
             'price': str(self.price),
             'config': str(self.config),
-            'userId': self.user.to_json()
+            'userId': self.user.to_json(),
+            'slots': {'slots': [slot.to_json() for slot in self.slots]}
         }
         return parking_json
 

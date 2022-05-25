@@ -25,7 +25,7 @@ def index():
         r = requests.get(url=url)
         try:
             form_setup = CreateParking()
-            if json.loads(r.text)['parkingId'] == None:
+            if json.loads(r.text)['parkingId'] == None: # Verificar si tiene un parking id asociado
                 if form_setup.validate_on_submit():
                     url = str(current_app.config['API_URL']) + str('/parking/add')
                     data = {
@@ -40,14 +40,20 @@ def index():
                     r = requests.post(url=url, headers=headers, json=data)
                     parkingId = json.loads(r.text)["parkingId"]
                     url = str(current_app.config['API_URL']) + str('/generateqr/' + str(parkingId))
-                    requests.get(url=url, headers=headers)
+                    requests.post(url=url, headers=headers)
                     data = {
                         "parkingId": parkingId
                     }
                     requests.put(current_app.config['API_URL'] + "/user/" + str(flask_login.current_user.id), headers=headers, data=json.dumps(data))
+                    data = {
+                        "parkingId": int(parkingId),
+                        "amount": int(form_setup.space.data)
+                    }
+                    requests.post(current_app.config['API_URL'] + "/slots/add-slots", headers=headers, data=json.dumps(data))
+
                     return redirect(url_for('index.index'))
                 return render_template('setup.html', current_user=flask_login.current_user, form_setup=form_setup)
-            else:
+            else: # Si tiene un parking y puede configurarlo
                 r = requests.get(current_app.config['API_URL'] + "/parking/" + str(json.loads(r.text)['parkingId']), headers=headers)
                 form_setup.name.data = json.loads(r.text)['name']
                 form_setup.location.data = json.loads(r.text)['location']

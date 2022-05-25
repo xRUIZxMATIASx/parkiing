@@ -34,7 +34,6 @@ class Parking(Resource):
 class Parkings(Resource):
 
     def get(self, params):
-
         coordinates = params.split('&')[0]
         max_distance = float(params.split('&')[1])
         parkings = db.session.query(ParkingModel).all()

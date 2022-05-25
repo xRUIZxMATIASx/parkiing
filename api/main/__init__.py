@@ -19,6 +19,7 @@ def create_app():
     app.config.from_object(DevelopmentConfig())
     db.init_app(app)
 
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_size': 100, 'pool_recycle': 280, 'pool_pre_ping': True}
     app.config["JWT_SECRET_KEY"] = "qwertyuiop"
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = int(os.getenv('JWT_ACCESS_TOKEN_EXPIRES'))
     jwt.init_app(app)
@@ -32,10 +33,13 @@ def create_app():
     api.add_resource(resources.ParkingsResource, '/parkings/<params>')
     api.add_resource(resources.UserResource, '/user/<id>')
     api.add_resource(resources.GenerateQRResource, '/generateqr/<id>')
+    api.add_resource(resources.SlotsResource, '/slots/<id>')
+    api.add_resource(resources.HistoryResource, '/history/<id>')
     api.init_app(app)
 
     app.register_blueprint(routes.auth)
     app.register_blueprint(routes2.parking)
+    app.register_blueprint(routes2.slots)
 
     app.config['MAIL_HOSTNAME'] = os.getenv('MAIL_HOSTNAME')
     app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')

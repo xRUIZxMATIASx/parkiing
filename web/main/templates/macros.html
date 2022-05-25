@@ -1,5 +1,5 @@
 {% macro show_parkings(parking) %}
-<tr onclick="window.location='http://google.com'">
+<tr onclick="window.location='/parkings/search/{{parking.parkingId}}'">
     <td>{{parking.name}}</td>
     <td>{{parking.space}}</td>
     <td>{{parking.rate}}</td>

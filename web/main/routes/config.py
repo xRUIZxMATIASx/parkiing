@@ -53,7 +53,7 @@ def index():
                 form_setup.location.data = json.loads(r.text)['location']
                 form_setup.space.data = json.loads(r.text)['space']
                 form_setup.price.data = json.loads(r.text)['price']
-                # Verificar si guardado los cambios
+                # Falta programar que se guarden los cambios de ajustes
                 return render_template('setup.html', current_user=flask_login.current_user, form_setup=form_setup)
         except Exception as e:
             print(e)

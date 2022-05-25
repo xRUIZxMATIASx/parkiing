@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <title>Title</title>
+      <style type="text/css">
+       body { margin:0; padding:0; }
+       #reader { position: absolute; top:0; bottom:0; right:0; left:0; }
+     </style>
+   </head>
+   <body>
+      <script type="text/javascript" src="../static/js/qrcode.js"></script>
+      <style>
+         .result{
+         background-color: green;
+         color:#fff;
+         padding:20px;
+         }
+         .row{
+         display:flex;
+         }
+      </style>
+      <div id="reader"></div>
+
+      <script type="text/javascript">
+         function onScanSuccess(qrCodeMessage) {
+            window.location.href = qrCodeMessage;
+            //document.getElementById('result').innerHTML = '<span class="result">'+qrCodeMessage+'</span>';
+         }
+         function onScanError(errorMessage) {
+           //handle scan error
+         }
+         var html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+         html5QrcodeScanner.render(onScanSuccess, onScanError);
+      </script>
+   </body>
+</html>

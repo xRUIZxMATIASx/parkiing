@@ -24,30 +24,30 @@ class Parking(db.Model):
 
     def to_json(self):
         self.user = db.session.query(User).get_or_404(self.userId)
-        sensor_json = {
+        parking_json = {
             'parkingId': self.parkingId,
             'name': str(self.name),
             'location': str(self.location),
             'space': int(self.space),
-            'qr': bool(self.qr),
-            'rate': bool(self.rate),
+            'qr': str(self.qr),
+            'rate': int(self.rate),
             'price': str(self.price),
             'config': str(self.config),
             'userId': self.user.to_json()
         }
-        return sensor_json
+        return parking_json
 
     @staticmethod
-    def from_json(sensor_json):
-        parkingId = sensor_json.get('parkingId')
-        name = sensor_json.get('name')
-        location = sensor_json.get('location')
-        space = sensor_json.get('space')
-        qr = sensor_json.get('qr')
-        rate = sensor_json.get('rate')
-        price = sensor_json.get('price')
-        config = sensor_json.get('config')
-        userId = sensor_json.get('userId')
+    def from_json(parking_json):
+        parkingId = parking_json.get('parkingId')
+        name = parking_json.get('name')
+        location = parking_json.get('location')
+        space = parking_json.get('space')
+        qr = parking_json.get('qr')
+        rate = parking_json.get('rate')
+        price = parking_json.get('price')
+        config = parking_json.get('config')
+        userId = parking_json.get('userId')
 
         return Parking(parkingId=parkingId,
                        name=name,

@@ -34,12 +34,13 @@ def create_app():
     csrf = CSRFProtect(app)
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
-    from main.routes import login, home, users, config
+    from main.routes import login, home, users, config, parkings
     login_manager.init_app(app)
     app.register_blueprint(login)
     app.register_blueprint(home)
     app.register_blueprint(users)
     app.register_blueprint(config)
+    app.register_blueprint(parkings)
 
     csrf.init_app(app)
     return app

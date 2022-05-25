@@ -19,10 +19,11 @@ def index():
     else:
         if request.method == 'POST':
             location = request.form['location']
-            resp = make_response(render_template('home-common.html'))
-            expire_date = datetime.datetime.now()
-            expire_date = expire_date + datetime.timedelta(hours=1)
-            resp.set_cookie('location', location, expires=expire_date)
+            url = str(current_app.config['API_URL']) + '/parkings/' + location + '&' + '5000'
+            r = requests.get(url=url)
+            parkings = json.loads(r.text)['parkings']
+            resp = make_response(render_template('home-common.html', current_user=flask_login.current_user, parkings=parkings))
+            resp.set_cookie('location', location)
             return resp
         location = request.cookies.get('location')
         if location != None:

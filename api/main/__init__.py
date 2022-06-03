@@ -40,6 +40,7 @@ def create_app():
     app.register_blueprint(routes.auth)
     app.register_blueprint(routes2.parking)
     app.register_blueprint(routes2.slots)
+    app.register_blueprint(routes2.history)
 
     app.config['MAIL_HOSTNAME'] = os.getenv('MAIL_HOSTNAME')
     app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')

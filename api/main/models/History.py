@@ -7,18 +7,19 @@ class History(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     parkingId = db.Column(db.Integer, nullable=False)
     userId = db.Column(db.Integer, nullable=False)
-    i_timestamp = db.Column(db.TIMESTAMP, nullable=False)
-    f_timestamp = db.Column(db.TIMESTAMP, nullable=False)
+    i_timestamp = db.Column(db.Integer, nullable=False)
+    f_timestamp = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
         return '<History: %r>' % (self.id)
 
     def to_json(self):
+        self.user = db.session.query(User).get_or_404(self.userId)
         history_json = {
             'id': self.id,
             'parkingId': int(self.parkingId),
-            'userId': int(self.location),
+            'userId': self.user.to_json(),
             'i_timestamp': self.i_timestamp,
             'f_timestamp': self.f_timestamp,
             'price': int(self.price)

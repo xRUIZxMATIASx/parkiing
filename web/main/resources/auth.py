@@ -8,9 +8,10 @@ import os
 from main import login_manager
 
 class LoggedUser(UserMixin):
-    def __init__(self, id, admin):
+    def __init__(self, id, admin, parkingId):
         self.id = id
         self.admin = admin
+        self.parkingId = parkingId
 
 @login_manager.request_loader
 def load_user(request):
@@ -20,7 +21,8 @@ def load_user(request):
             user_data = decoded_token['sub']
             user = LoggedUser(
                 id=user_data['userId'],
-                admin=user_data['admin']
+                admin=user_data['admin'],
+                parkingId=user_data['parkingId']
             )
             return user
         except exceptions.DecodeError as e:

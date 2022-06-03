@@ -28,7 +28,8 @@ def index():
             user_json = json.loads(r.text)
             logged_user = LoggedUser(
                 id=user_json['id'],
-                admin=user_json['admin']
+                admin=user_json['admin'],
+                parkingId=user_json['parkingId']
             )
             login_user(logged_user)
             if ast.literal_eval(user_json['admin']) == True:

@@ -16,6 +16,15 @@
 </tr>
 {% endmacro %}
 
+{% macro show_clients(client) %}
+<tr>
+    <td>{{client.userId.email}}</td>
+    <td>{{client.i_timestamp}}</td>
+    <td>{{client.f_timestamp}}</td>
+    <td>{{client.price}}</td>
+</tr>
+{% endmacro %}
+
 {% macro show_markers(parking) %}
     {% set lat, lon = parking.location.split(',') %}
     markers.addLayer(L.marker(["{{ lat }}", "{{ lon }}"], {icon: L.AwesomeMarkers.icon({})}).bindTooltip('{{parking.name}}', {permanent: false, className: 'my-label', offset: [0, 0] }));

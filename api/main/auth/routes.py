@@ -13,7 +13,7 @@ def login():
     user = db.session.query(UserModel).filter(UserModel.email == json_request.get("email")).first_or_404()
     if user.validate_pass(request.get_json().get('password')):
         access_token = create_access_token(identity=user.to_json())
-        data = '{"id":"'+str(user.userId)+'","email":"'+str(user.email)+'", "access_token":"'+access_token+'", "admin":"'+str(user.admin)+'"}'
+        data = '{"id":"'+str(user.userId)+'","email":"'+str(user.email)+'", "access_token":"'+access_token+'", "admin":"'+str(user.admin)+'", "parkingId":"'+str(user.parkingId)+'"}'
         return data, 200
     else:
         return "Incorrect password", 204

@@ -114,24 +114,6 @@
                     <p class="mb-md-0">Detalle.</p>
                   </div>
                 </div>
-                <div class="d-flex justify-content-between align-items-end flex-wrap">
-                  {% if avaible_slots == 0 %}
-                    {% if can_finish %}
-                      <a href="/parkings/search/{{ parking.parkingId }}/scan" class="btn btn-danger mt-2 mt-xl-0">Finalizar</a>
-                    {% endif %}
-                    {% if not can_finish %}
-                      <a class="btn btn-secondary mt-2 mt-xl-0">No disponible</a>
-                    {% endif %}
-                  {% endif %}
-                  {% if avaible_slots != 0 %}
-                    {% if can_finish %}
-                      <a href="/parkings/search/{{ parking.parkingId }}/scan" class="btn btn-danger mt-2 mt-xl-0">Finalizar</a>
-                    {% endif %}
-                    {% if not can_finish %}
-                      <a href="/parkings/search/{{ parking.parkingId }}/scan" class="btn btn-success mt-2 mt-xl-0">Adquirir servicio</a>
-                    {% endif %}
-                  {% endif %}
-                </div>
               </div>
             </div>
           </div>
@@ -153,24 +135,24 @@
                                 <td>{{ parking.name }}</td>
                              </tr>
                              <tr>
-                                <td>Espacios</td>
-                                <td>{{ parking.space }}</td>
-                             </tr>
-                             <tr>
-                                <td>Disponibles</td>
-                                <td>{{ avaible_slots }}</td>
-                             </tr>
-                             <tr>
-                                <td>Calificaciones</td>
-                                <td>{{ parking.rate }}</td>
-                             </tr>
-                             <tr>
                                 <td>Precio</td>
-                                <td>{{ parking.price }}</td>
+                                <td>{{ price }}</td>
                              </tr>
                              <tr>
-                                <td>Coordenadas</td>
-                                <td>{{ parking.location }}</td>
+                                <td>Fecha inicio</td>
+                                <td>{{ i_datetime }}</td>
+                             </tr>
+                             <tr>
+                                <td>Fecha final</td>
+                                <td>{{ f_datetime }}</td>
+                             </tr>
+                             <tr>
+                                <td>Total de horas</td>
+                                <td>{{ total_hours }}</td>
+                             </tr>
+                             <tr>
+                                <td>Precio a pagar</td>
+                                <td>{{ total_price }}</td>
                              </tr>
                           </tbody>
                        </table>

@@ -2,6 +2,7 @@ from flask import request, Blueprint
 from .. import db
 from main.models import ParkingModel
 from main.models import SlotsModel
+from main.models import HistoryModel
 from sqlalchemy import select
 from datetime import datetime
 
@@ -95,7 +96,7 @@ def delete_user():
         return "No", 403  # El usuario no se encuentra en el slots
 
 # Obtener un usuario de un slots
-@slots.route('/get-user/<id>', methods=['POST'])
+@slots.route('/get-user/<id>', methods=['GET'])
 def get_user(id):
     slots = db.session.query(SlotsModel).filter(SlotsModel.userId == int(id)).first()
     if slots != None:
@@ -106,3 +107,43 @@ def get_user(id):
     else:
         return "No", 403  # El usuario no se encuentra
 
+history = Blueprint('history', __name__, url_prefix='/history')
+
+# Guardar history
+@history.route('/save-history', methods=['POST'])
+def save_history():
+    new_json = request.get_json()
+    history = HistoryModel.from_json(new_json)
+    try:
+        db.session.add(history)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return str(e), 409
+    return history.to_json(), 201
+
+# Obtener ultimo registro del cliente especifico
+@history.route('/get-last-history/<id>', methods=['GET'])
+def get_user(id):
+    new_json = request.get_json()
+    history = db.session.query(HistoryModel).filter(HistoryModel.parkingId == int(id))
+    history = history.filter(HistoryModel.userId == new_json['userId']).order_by(HistoryModel.id.desc()).first()
+    if history != None:
+        try:
+            return history.to_json(), 201
+        except Exception as e:
+            return str(e), 409
+    else:
+        return "No", 403  # El history no se encuentra
+
+# Obtener history por parking
+@history.route('/get-all-history/<id>', methods=['GET'])
+def get_all_user(id):
+    histories = db.session.query(HistoryModel).filter(HistoryModel.parkingId == int(id)).all()
+    if histories != None:
+        try:
+            return {'history': [history.to_json() for history in histories]}, 201
+        except Exception as e:
+            return str(e), 409
+    else:
+        return "No", 403  # El history no se encuentra

@@ -54,12 +54,23 @@ def index():
                     return redirect(url_for('index.index'))
                 return render_template('setup.html', current_user=flask_login.current_user, form_setup=form_setup)
             else: # Si tiene un parking y puede configurarlo
-                r = requests.get(current_app.config['API_URL'] + "/parking/" + str(json.loads(r.text)['parkingId']), headers=headers)
-                form_setup.name.data = json.loads(r.text)['name']
-                form_setup.location.data = json.loads(r.text)['location']
-                form_setup.space.data = json.loads(r.text)['space']
-                form_setup.price.data = json.loads(r.text)['price']
+
                 # Falta programar que se guarden los cambios de ajustes
+                if form_setup.validate_on_submit():
+                    data = {
+                        'name': form_setup.name.data,
+                        'location': form_setup.location.data,
+                        'space': form_setup.space.data,
+                        'price': form_setup.price.data
+                    }
+                    requests.put(current_app.config['API_URL'] + "/parking/" + str(flask_login.current_user.parkingId), headers=headers, data=json.dumps(data))
+                    return redirect(url_for('config.index'))
+                else:
+                    r = requests.get(current_app.config['API_URL'] + "/parking/" + str(json.loads(r.text)['parkingId']), headers=headers)
+                    form_setup.name.data = json.loads(r.text)['name']
+                    form_setup.location.data = json.loads(r.text)['location']
+                    form_setup.space.data = json.loads(r.text)['space']
+                    form_setup.price.data = json.loads(r.text)['price']
                 return render_template('setup.html', current_user=flask_login.current_user, form_setup=form_setup)
         except Exception as e:
             print(e)
